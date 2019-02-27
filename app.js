@@ -2,12 +2,9 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
-
+const mongoose = require('mongoose');
 // Add Error Controller:
 const errorController = require('./controllers/error');
-
-// Add MongoDB Database:
-const mongoConnect = require('./util/database').mongoConnect;
 
 // Add Model:
 const User = require('./models/user');
@@ -52,6 +49,12 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-mongoConnect(() => {
-  app.listen(3000);
-})
+mongoose.connect(
+  'mongodb+srv://francispham:Heroman1989@nodebasic-4blxc.mongodb.net/shop?retryWrites=true'
+  )
+  .then(result => {
+    app.listen(3000);
+  })
+  .catch(err => {
+    console.log(err);
+  });
