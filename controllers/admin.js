@@ -63,14 +63,15 @@ exports.postEditProduct = (req, res, next) => {
     const updatedImageUrl = req.body.imageUrl;
     const updatedDesc = req.body.description;
 
-    const product = new Product(
-        updatedTitle, 
-        updatedPrice, 
-        updatedDesc, 
-        updatedImageUrl, 
-        prodId
-    );
-    product.save()
+    // Mongoose Method:
+    Product.findById(prodId)
+        .then(product => {
+            product.title = updatedTitle; 
+            product.price = updatedPrice; 
+            product.description = updatedDesc; 
+            product.imageUrl = updatedImageUrl; 
+            return product.save();
+        })
         .then(result => {
             console.log('UPDATED PRODUCT!');
             res.redirect('/admin/products');
@@ -80,7 +81,7 @@ exports.postEditProduct = (req, res, next) => {
 
 // For Render Product Admin Page:
 exports.getProducts = (req, res, next) => {
-    Product.fetchAll()
+    Product.find()
         .then(products => {
             res.render('admin/products', {
                 prods: products,
