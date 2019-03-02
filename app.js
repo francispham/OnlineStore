@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const errorController = require('./controllers/error');
 
 // Add Model:
-// const User = require('./models/user');
+const User = require('./models/user');
 
 const app = express();
 
@@ -35,14 +35,14 @@ app.use((req, res, next) => {
 });
 
 // Add Middleware for Retrieving User:
-// app.use((req, res, next) => {
-//   User.findById('5c6f955d1c9d4400005f5f9b')
-//     .then(user => {
-//       req.user = new User(user.name, user.email, user.cart, user._id);
-//       next();
-//     })
-//     .catch(err => console.log(err));
-// });
+app.use((req, res, next) => {
+  User.findById('5c7ae7918ccd1c329cd986a2')
+    .then(user => {
+      req.user = user;
+      next();
+    })
+    .catch(err => console.log(err));
+});
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
@@ -50,10 +50,24 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 
 mongoose.connect(
-  'mongodb+srv://francispham:Heroman1989@nodebasic-4blxc.mongodb.net/shop?retryWrites=true'
+  'mongodb+srv://phongp:Heroman1989@cluster0-k8zmj.mongodb.net/shop?retryWrites=true', 
+  { useNewUrlParser: true }
   )
   .then(result => {
-    app.listen(3000);
+    // Hard coded user:
+    User.findOne().then(user => {
+      if (!user) {
+        const user = new User({
+          name: 'Francis',
+          email: 'test@test.com',
+          cart: {
+            items: []
+          }
+        });
+        user.save();
+      }
+    });
+    app.listen(3003);
   })
   .catch(err => {
     console.log(err);
