@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 // Add Error Controller:
 const errorController = require('./controllers/error');
@@ -11,7 +12,14 @@ const errorController = require('./controllers/error');
 // Add Model:
 const User = require('./models/user');
 
+const MONGODB_URI = 'mongodb+srv://phongp:Heroman1989@cluster0-k8zmj.mongodb.net/shop?retryWrites=true';
+
 const app = express();
+
+const store = new MongoDBStore({
+  uri: MONGODB_URI,
+  collection: 'sessions'
+})
 
 
 // Implement Ejs:
@@ -31,7 +39,12 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(
-  session({ secret: 'my supersecret', resave: false, saveUninitialized: false })
+  session({ 
+    secret: 'my supersecret', 
+    resave: false, 
+    saveUninitialized: false, 
+    store: store 
+  })
 );
 
 
@@ -57,7 +70,7 @@ app.use(authRoutes);
 app.use(errorController.get404);
 
 mongoose.connect(
-  'mongodb+srv://phongp:Heroman1989@cluster0-k8zmj.mongodb.net/shop?retryWrites=true', 
+  MONGODB_URI,
   { useNewUrlParser: true }
   )
   .then(result => {
