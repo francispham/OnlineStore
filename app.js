@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(
-  session({ secret: 'my supersecret', resave: false, saveUninitialized:false })
+  session({ secret: 'my supersecret', resave: false, saveUninitialized: false })
 );
 
 
