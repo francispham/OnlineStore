@@ -77,6 +77,7 @@ mongoose.connect(
   { useNewUrlParser: true }
   )
   .then(result => {
+    /* Do Not Need this anymore:
     // Hard coded user:
     User.findOne().then(user => {
       if (!user) {
@@ -90,6 +91,7 @@ mongoose.connect(
         user.save();
       }
     });
+    */
     app.listen(3003);
   })
   .catch(err => {
