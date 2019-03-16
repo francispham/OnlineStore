@@ -21,12 +21,9 @@ const store = new MongoDBStore({
   collection: 'sessions'
 })
 
-
 // Implement Ejs:
 app.set('view engine', 'ejs');
-
 app.set('views', 'views');
-
 
 // Add Controller:
 const adminRoutes = require('./routes/admin');
