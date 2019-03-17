@@ -7,10 +7,12 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf')
 
+
 // Add Error Controller:
 const errorController = require('./controllers/error');
 
-// Add Model:
+
+// Add User Model:
 const User = require('./models/user');
 
 const MONGODB_URI = 'mongodb+srv://phongp:Heroman1989@cluster0-k8zmj.mongodb.net/shop?retryWrites=true';
@@ -24,15 +26,18 @@ const store = new MongoDBStore({
 
 const csrfProtection = csrf();
 
+
 // Implement Ejs:
 app.set('view engine', 'ejs');
 app.set('views', 'views');
+
 
 // Add Controller:
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
-``
+
+
 // For Serving Files Statically (eg public folder): 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({
@@ -53,7 +58,8 @@ app.use((req, res, next) => {
   next(); // Allows the request to continue to the next middleware in line
 });
 
-// Add Middleware for Retrieving User:
+
+// Add Custom Made Middlewares:
 app.use((req, res, next) => {
   if (!req.session.user) {
     return next();
@@ -66,6 +72,14 @@ app.use((req, res, next) => {
     .catch(err => console.log(err));
 });
 
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+})
+
+
+// Add Routes
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
