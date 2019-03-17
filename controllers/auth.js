@@ -10,7 +10,7 @@ exports.getLogin = (req, res, next) => {
         .trim()
         .split('=')[1] === 'true';
     // console.log(isLoggedIn);   
-    */                    
+    */
     res.render('auth/login', {
         path: '/login',
         pageTitle: 'Login',
