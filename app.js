@@ -7,7 +7,7 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
-
+const keys = require('./config/keys');
 
 
 // Add Error Controller:
@@ -17,7 +17,7 @@ const errorController = require('./controllers/error');
 // Add User Model:
 const User = require('./models/user');
 
-const MONGODB_URI = 'mongodb+srv://phongp:Heroman1989@cluster0-k8zmj.mongodb.net/shop?retryWrites=true';
+const MONGODB_URI = keys.MONGODB_URI;
 
 const app = express();
 
