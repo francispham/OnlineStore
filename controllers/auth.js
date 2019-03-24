@@ -148,7 +148,7 @@ exports.getReset = (req, res, next) => {
     });
 };
 
-exports.postRest = (req, res, next) => {
+exports.postReset = (req, res, next) => {
     crypto.randomBytes(32, (err, buffer) => {
         if (err) {
             console.log(err);
