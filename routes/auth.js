@@ -10,7 +10,20 @@ router.get('/login', authController.getLogin);
 
 router.get('/signup', authController.getSignup);
 
-router.post('/login', authController.postLogin);
+router.post(
+    '/login',
+    [
+        check('email')
+            .isEmail()
+            .withMessage('Not A Valid Email!'),
+        body(
+            'password',
+            'Please enter a password with only number & text & at least 5 characters.'
+            )
+            .isLength({ min:5 })
+            .isAlphanumeric()
+    ],
+    authController.postLogin);
 
 router.post(
     '/signup', 
