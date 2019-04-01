@@ -57,7 +57,7 @@ exports.postLogin = (req, res, next) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render('auth/login', {
+        return res.status(422).render('auth/login', {
             path:'/login',
             pageTitle: 'Login',
             errorMessage: errors.array()[0].msg
