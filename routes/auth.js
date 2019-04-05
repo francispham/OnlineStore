@@ -1,4 +1,6 @@
 const express = require('express');
+
+// Add Validation:
 const { check, body } = require('express-validator/check');
 
 const authController = require('../controllers/auth');
@@ -16,7 +18,7 @@ router.post(
         check('email')
             .isEmail()
             .withMessage('Not A Valid Email!')
-            .normalizeEmail(),
+            .normalizeEmail({ gmail_remove_dots:false }),
         body(
             'password',
             'Please enter a password with only number & text & at least 5 characters.'
@@ -48,7 +50,7 @@ router.post(
                     }
                 });
             })
-            .normalizeEmail(),
+            .normalizeEmail({ gmail_remove_dots:false }),
         body(
             'password',
             'Please enter a password with only number & text & at least 5 characters.'
