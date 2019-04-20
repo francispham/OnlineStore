@@ -56,31 +56,7 @@ app.use(
 app.use(csrfProtection);
 app.use(flash());
 
-app.use((req, res, next) => {
-  console.log('This always runs!');
-  next(); // Allows the request to continue to the next middleware in line
-});
-
-
-// Add Custom Made Middlewares:
-app.use((req, res, next) => {
-  if (!req.session.user) {
-    return next();
-  }
-  User.findById(req.session.user._id)
-    .then(user => {
-      if (!user) {
-        return next();
-      }
-      req.user = user;
-      next();
-    })
-    .catch(err => {
-      throw new Error(err); //ExpressJS's way of handling error! Or:
-      // next();
-    });
-});
-
+// Add CSRFToken:
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
   res.locals.csrfToken = req.csrfToken();
@@ -88,10 +64,39 @@ app.use((req, res, next) => {
 })
 
 
+// Add Custom Made Middlewares:
+app.use((req, res, next) => {
+  console.log('This always runs!');
+  next(); // Allows the request to continue to the next middleware in line
+});
+
+app.use((req, res, next) => {
+  // throw new Error('Sync Dummy'); // This won't break the app with line 88
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
+    .then(user => {
+      // throw new Error('Dummy'); // For Stimulate Error, will break the app with line 88
+      if (!user) {
+        return next();
+      }
+      req.user = user;
+      next();
+    })
+    .catch(err => {
+      // throw new Error(err);
+      next(new Error(err)); //ExpressJS's way of handling error! Or:
+      // next();
+    });
+});
+
+
 // Add Routes
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
+
 
 // Error Handling:
 app.get('/500', errorController.get500);
@@ -100,7 +105,12 @@ app.use(errorController.get404);
 
 app.use((error, req, res, next) => {
   // res.status(error.httpStatusCode).render(...);
-  res.redirect('/500');
+  // res.redirect('/500');
+  res.status(500).render('500', {
+    pageTitle: 'Error',
+    path: '/500',
+    isAuthenticated: req.session.isLoggedIn
+  });
 });
 
 
