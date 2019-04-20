@@ -44,7 +44,7 @@ exports.postAddProduct = (req, res, next) => {
     }
 
     const product = new Product({
-        _id: new mongoose.Types.ObjectId('5ca1aae6c9e9b0558afac0c8'),
+        // _id: new mongoose.Types.ObjectId('5ca1aae6c9e9b0558afac0c8'), //This for adding error for testing
         title: title, 
         price: price, 
         description: description, 
@@ -141,7 +141,11 @@ exports.postEditProduct = (req, res, next) => {
                     res.redirect('/admin/products');
                 })
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
 };
 
 // For Render Product Admin Page:
@@ -158,7 +162,11 @@ exports.getProducts = (req, res, next) => {
                 path: '/admin/products'
             });
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
 };
 
 exports.postDeleteProduct = (req, res, next) => {
@@ -169,7 +177,11 @@ exports.postDeleteProduct = (req, res, next) => {
             console.log('DESTROYED PRODUCT');
             res.redirect('/admin/products');
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
 };
 
 
