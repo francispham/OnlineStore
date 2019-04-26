@@ -29,6 +29,15 @@ const store = new MongoDBStore({
 
 const csrfProtection = csrf();
 
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString() + '-' + file.originalname);
+  }
+});
+
 
 // Implement Ejs:
 app.set('view engine', 'ejs');
@@ -50,7 +59,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 // For Storing the Incoming Files:
-app.use(multer({ dest: 'images' }).single('image')) // 'image' because in ejs file: <input name="image">
+app.use(multer({ storage: fileStorage }).single('image')) // 'image' because in ejs file: <input name="image">
 
 app.use(
   session({ 
