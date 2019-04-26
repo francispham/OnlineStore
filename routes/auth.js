@@ -15,7 +15,7 @@ router.get('/signup', authController.getSignup);
 router.post(
     '/login',
     [
-        check('email')
+        body('email')
             .isEmail()
             .withMessage('Not A Valid Email!')
             .normalizeEmail({ gmail_remove_dots:false }),
@@ -27,7 +27,8 @@ router.post(
             .isAlphanumeric()
             .trim()
     ],
-    authController.postLogin);
+    authController.postLogin
+);
 
 router.post(
     '/signup', 

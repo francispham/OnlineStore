@@ -28,6 +28,7 @@ exports.postAddProduct = (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
+        console.log(errors.array());
         return res.status(422).render('admin/edit-product', {
             pageTitle: 'Add Product',
             path: '/admin/add-product',

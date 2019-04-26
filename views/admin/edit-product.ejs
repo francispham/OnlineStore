@@ -16,7 +16,8 @@
                 <input 
                     class="<%= validationErrors.find(e => e.param === 'title') ? 'invalid' : '' %>"
                     type="text" 
-                    name="title" id="title" 
+                    name="title" 
+                    id="title" 
                     value="<% if (editing || hasError ) { %><%= product.title %><% } %>"
                 >
             </div>

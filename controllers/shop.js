@@ -81,6 +81,11 @@ exports.postCart = (req, res, next) => {
         .then(result => {
             console.log(result);
             res.redirect('/cart');
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         });
 };
 
@@ -119,7 +124,7 @@ exports.postOrder = (req, res, next) => {
             return req.user.clearCart();
         })
         .then(() => {
-            return req.res.redirect('/orders');
+            return res.redirect('/orders');
         }) 
         .catch(err => {
             const error = new Error(err);
@@ -142,11 +147,4 @@ exports.getOrders = (req, res, next) => {
             error.httpStatusCode = 500;
             return next(error);
         });
-};
-
-exports.getCheckout = (req, res, next) => {
-    res.render('shop/checkout', {
-        path: '/checkout',
-        pageTitle: 'Checkout'
-    });
 };
