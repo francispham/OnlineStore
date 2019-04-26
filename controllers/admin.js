@@ -19,9 +19,10 @@ exports.getAddProduct = (req, res, next) => {
 // For Post New Product:
 exports.postAddProduct = (req, res, next) => {
     const title = req.body.title;
-    const imageUrl = req.body.imageUrl;
+    const imageUrl = req.file;
     const price = req.body.price;
     const description = req.body.description;
+    console.log(imageUrl)
     
     // Applying Express Validator: 
     const errors = validationResult(req);

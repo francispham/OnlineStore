@@ -8,6 +8,7 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
 const keys = require('./config/keys');
+const multer = require('multer');
 
 
 // Add Error Controller:
@@ -42,9 +43,15 @@ const authRoutes = require('./routes/auth');
 
 // For Serving Files Statically (eg public folder): 
 app.use(express.static(path.join(__dirname, 'public')));
+
+// For Parsing Incoming Request Bodies (under the req.body property):
 app.use(bodyParser.urlencoded({
   extended: false
 }));
+
+// For Storing the Incoming Files:
+app.use(multer({ dest: 'images' }).single('image')) // 'image' because in ejs file: <input name="image">
+
 app.use(
   session({ 
     secret: 'my supersecret', 
