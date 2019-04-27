@@ -38,6 +38,13 @@ const fileStorage = multer.diskStorage({
   }
 });
 
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+    cb( null, true);
+  } else {
+    cb(null, false);
+  }
+}
 
 // Implement Ejs:
 app.set('view engine', 'ejs');
@@ -57,7 +64,7 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 // For Storing the Incoming Files:
-app.use(multer({ storage: fileStorage }).single('image')) // 'image' because in ejs file: <input name="image">
+app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')) // 'image' because in ejs file: <input name="image">
 
 app.use(
   session({ 
