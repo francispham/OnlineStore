@@ -19,10 +19,25 @@ exports.getAddProduct = (req, res, next) => {
 // For Post New Product:
 exports.postAddProduct = (req, res, next) => {
     const title = req.body.title;
-    const imageUrl = req.file;
+    const image = req.file;
     const price = req.body.price;
     const description = req.body.description;
-    console.log(imageUrl)
+    // Image Validation:
+    if (!image) {
+        return res.status(422).render('admin/edit-product', {
+            pageTitle: 'Add Product',
+            path: '/admin/add-product',
+            editing: false,
+            hasError: true,
+            product: {
+                title: title,
+                price: price,
+                description: description
+            },
+            errorMessage: 'Attached file is not an image.',
+            validationErrors: []
+        });
+    }
     
     // Applying Express Validator: 
     const errors = validationResult(req);
@@ -45,6 +60,9 @@ exports.postAddProduct = (req, res, next) => {
         });
     }
 
+    const imageUrl = image.path;
+
+    // Create Product into Database:
     const product = new Product({
         // _id: new mongoose.Types.ObjectId('5ca1aae6c9e9b0558afac0c8'), //This for adding error for testing
         title: title, 
