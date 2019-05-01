@@ -156,6 +156,7 @@ mongoose.connect(
       }
     });
     */
+   console.log("Listening")
     app.listen(3000);
   })
   .catch(err => {
