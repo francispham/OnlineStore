@@ -4,6 +4,8 @@ const path = require('path');
 const Product = require('../models/product');
 const Order = require('../models/order');
 
+const PDFDocument = require('pdfkit');
+
 exports.getProducts = (req, res, next) => {
     Product.find()
         .then(products => {
@@ -163,8 +165,23 @@ exports.getInvoice = (req, res, next) => {
         }
         const invoiceName = 'invoice-' + orderId + '.pdf';
         const invoicePath = path.join('data', 'invoices', invoiceName);
-        // For Downloading the Files (Or Open File in The Browser):
+
+        //For Creating PDF Files:
+        const pdfDoc = new PDFDocument();
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader(
+            'Content-Disposition',
+            'inline; filename ="' + invoiceName + '"'
+        );
+        pdfDoc.pipe(fs.createWriteStream(invoicePath));
+        pdfDoc.pipe(res);
+
+        pdfDoc.text('Hello world!');
+
+        pdfDoc.end();
+
         /*
+        // For Downloading the Files (Or Open File in The Browser):
         fs.readFile(invoicePath, (err, data) => {
             if (err) {
                 // console.log(err);
@@ -175,7 +192,7 @@ exports.getInvoice = (req, res, next) => {
             
             res.send(data);
         });
-        */
+
         // Applying createReadStream() method for large files or Scaling:
         const file = fs.createReadStream(invoicePath);
         res.setHeader('Content-Type', 'application/pdf');
@@ -184,6 +201,8 @@ exports.getInvoice = (req, res, next) => {
             'inline; filename ="' + invoiceName + '"'
         );
         file.pipe(res);
-    }).catch(err => next(err));
+        */
+       
+        }).catch(err => next(err));
 
 };
