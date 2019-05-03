@@ -164,6 +164,7 @@ exports.getInvoice = (req, res, next) => {
         const invoiceName = 'invoice-' + orderId + '.pdf';
         const invoicePath = path.join('data', 'invoices', invoiceName);
         // For Downloading the Files (Or Open File in The Browser):
+        /*
         fs.readFile(invoicePath, (err, data) => {
             if (err) {
                 // console.log(err);
@@ -174,6 +175,15 @@ exports.getInvoice = (req, res, next) => {
             
             res.send(data);
         });
+        */
+        // Applying createReadStream() method for large files or Scaling:
+        const file = fs.createReadStream(invoicePath);
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader(
+            'Content-Disposition',
+            'inline; filename ="' + invoiceName + '"'
+        );
+        file.pipe(res);
     }).catch(err => next(err));
 
 };
