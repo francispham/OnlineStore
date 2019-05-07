@@ -6,6 +6,8 @@ const Order = require('../models/order');
 
 const PDFDocument = require('pdfkit');
 
+const ITEMS_PER_PAGE = 2; //For Implementing Pagination (FIP)
+
 exports.getProducts = (req, res, next) => {
     Product.find()
         .then(products => {
@@ -41,7 +43,11 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
+    const page = req.query.page; // FIP
+
     Product.find()
+        .skip((page-1) * ITEMS_PER_PAGE) //FIP
+        .limit(ITEMS_PER_PAGE) //FIP
         .then(products => {
             res.render('shop/index', {
                 prods: products,
