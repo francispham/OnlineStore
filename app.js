@@ -156,8 +156,8 @@ mongoose.connect(
       }
     });
     */
-    console.log("Listening")
-    app.listen(3000);
+   app.listen(3000);
+   console.log("Listening Localhost: 3000")
   })
   .catch(err => {
     console.log(err);
