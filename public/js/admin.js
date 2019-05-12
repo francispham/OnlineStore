@@ -1,3 +1,3 @@
-const deleteProduct = () => {
-    console.log('Click!!!')
+const deleteProduct = (btn) => {
+    console.log(btn)
 };
