@@ -56,6 +56,10 @@ router.post("/edit-product",
     adminController.postEditProduct
 );
 
+/* Before Sending JSON Data:
 router.post("/delete-product", isAuth, adminController.postDeleteProduct);
+*/
+//For Directly Send Request Through Browser Side JavaScript.
+router.delete('/product/:productId', isAuth, adminController.deleteProduct); 
 
 module.exports = router;
