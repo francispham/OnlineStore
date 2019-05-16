@@ -8,6 +8,10 @@ const PDFDocument = require('pdfkit');
 
 const ITEMS_PER_PAGE = 1; //For Implementing Pagination (FIP)
 
+const keys = require('../config/keys');
+
+const stripe = require('stripe')(keys.stripeSecKey);
+
 exports.getProducts = (req, res, next) => {
     const page = +req.query.page || 1; // FIP
     let totalItems;
@@ -169,33 +173,45 @@ exports.getCheckout = (req, res, next) => {
 }
 
 exports.postOrder = (req, res, next) => {
+    const token = req.body.stripeToken; // Using Express
+    let totalSum = 0;
     req.user
-        .populate('cart.items.productId')
-        .execPopulate()
-        .then(user => {
-            const products = user.cart.items.map(i => {
-                return { quantity: i.quantity, product: { ...i.productId._doc } };
-            })
-            const order = new Order({
-                user: {
-                    email: req.user.email,
-                    userId: req.user
-                },
-                products: products
-            });
-            return order.save();
-        })
-        .then(result => {
-            return req.user.clearCart();
-        })
-        .then(() => {
-            return res.redirect('/orders');
-        }) 
-        .catch(err => {
-            const error = new Error(err);
-            error.httpStatusCode = 500;
-            return next(error);
+    .populate('cart.items.productId')
+    .execPopulate()
+    .then(user => {
+        user.cart.items.forEach(p => {
+            totalSum += p.quantity * p.productId.price;
         });
+        const products = user.cart.items.map(i => {
+            return { quantity: i.quantity, product: { ...i.productId._doc } };
+        })
+        const order = new Order({
+            user: {
+                email: req.user.email,
+                userId: req.user
+            },
+            products: products
+        });
+        return order.save();
+    })
+    .then(result => {
+        const charge = stripe.charges.create({
+            amount: totalSum * 100,
+            currency: 'cad',
+            description: 'Example charge',
+            source: token,
+            metadata: { order_id: result._id.toString() }
+        });
+        return req.user.clearCart();
+    })
+    .then(() => {
+        return res.redirect('/orders');
+    }) 
+    .catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+    });
 };
 
 exports.getOrders = (req, res, next) => {
