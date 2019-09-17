@@ -23,3 +23,5 @@ yarn-error.log*
 config.js
 .vscode/
 keys.js
+
+/images
