@@ -8,9 +8,7 @@ const PDFDocument = require('pdfkit');
 
 const ITEMS_PER_PAGE = 1; //For Implementing Pagination (FIP)
 
-const keys = require('../config/keys');
-
-const stripe = require('stripe')(keys.stripeSecKey);
+const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 exports.getProducts = (req, res, next) => {
     const page = +req.query.page || 1; // FIP
@@ -267,30 +265,5 @@ exports.getInvoice = (req, res, next) => {
         pdfDoc.fontSize(20).text('Total Price: $' + totalPrice);
 
         pdfDoc.end();
-
-        /*
-        // For Downloading the Files (Or Open File in The Browser):
-        fs.readFile(invoicePath, (err, data) => {
-            if (err) {
-                // console.log(err);
-                return next(err);
-            }
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
-            
-            res.send(data);
-        });
-
-        // Applying createReadStream() method for large files or Scaling:
-        const file = fs.createReadStream(invoicePath);
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader(
-            'Content-Disposition',
-            'inline; filename ="' + invoiceName + '"'
-        );
-        file.pipe(res);
-        */
-       
         }).catch(err => next(err));
-
 };

@@ -7,23 +7,20 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
-const keys = require('./config/keys');
 const multer = require('multer');
 
 
 // Add Error & Shop Controllers:
 const errorController = require('./controllers/error');
 const shopController = require('./controllers/shop');
-
-
 // Add Auth Middleware:
 const isAuth = require('./middleware/is-auth');
-
-
 // Add User Model:
 const User = require('./models/user');
 
-const MONGODB_URI = keys.MONGODB_URI;
+// console.log(process.env>NODE_ENV);
+
+const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-k8zmj.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}?retryWrites=true`;
 
 const app = express();
 
@@ -158,23 +155,8 @@ mongoose.connect(
   { useNewUrlParser: true }
   )
   .then(result => {
-    /* Do Not Need this anymore:
-    // Hard coded user:
-    User.findOne().then(user => {
-      if (!user) {
-        const user = new User({
-          name: 'Francis',
-          email: 'test@test.com',
-          cart: {
-            items: []
-          }
-        });
-        user.save();
-      }
-    });
-    */
-   app.listen(3000);
-   console.log("Listening Localhost: 3000")
+   app.listen(process.env.PORT || 3000);
+   console.log("Listening Localhost: 3000 or NOT")
   })
   .catch(err => {
     console.log(err);
