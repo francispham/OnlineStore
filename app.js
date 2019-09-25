@@ -1,4 +1,6 @@
+// ExpressJS Core Module:
 const path = require('path');
+const fs = require('fs');
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -10,6 +12,7 @@ const flash = require('connect-flash');
 const multer = require('multer');
 const helmet = require('helmet');
 const compression = require('compression');
+const morgan = require('morgan');
 
 
 // Add Error & Shop Controllers:
@@ -50,18 +53,26 @@ const fileFilter = (req, file, cb) => {
   }
 }
 
+
 // Implement Ejs:
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
+// For Logging Data in Files instead of in Console when Deploying:
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, 'access.log'),
+  { flags: 'a' }
+);
 
 // Add Controller:
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
 
+// For Production:
 app.use(helmet());
 app.use(compression());
+app.use(morgan('combined', { stream: accessLogStream }));
 
 // For Serving Files & Images Statically (eg public folder): 
 app.use(express.static(path.join(__dirname, 'public')));
