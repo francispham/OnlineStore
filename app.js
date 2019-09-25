@@ -9,6 +9,7 @@ const csrf = require('csurf');
 const flash = require('connect-flash');
 const multer = require('multer');
 const helmet = require('helmet');
+const compression = require('compression');
 
 
 // Add Error & Shop Controllers:
@@ -60,6 +61,7 @@ const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
 
 app.use(helmet());
+app.use(compression());
 
 // For Serving Files & Images Statically (eg public folder): 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -156,8 +158,8 @@ mongoose.connect(
   { useNewUrlParser: true }
   )
   .then(result => {
-   app.listen(process.env.PORT || 3000);
-   console.log("Listening Localhost: 3000 or NOT")
+    app.listen(process.env.PORT || 3000);
+    console.log("Listening Localhost: 3000 or NOT")
   })
   .catch(err => {
     console.log(err);
