@@ -8,6 +8,7 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
 const multer = require('multer');
+const helmet = require('helmet');
 
 
 // Add Error & Shop Controllers:
@@ -58,6 +59,7 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
 
+app.use(helmet());
 
 // For Serving Files & Images Statically (eg public folder): 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -131,7 +133,6 @@ app.use((req, res, next) => {
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
-
 
 // Error Handling:
 app.get('/500', errorController.get500);
