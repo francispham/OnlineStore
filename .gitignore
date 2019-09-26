@@ -27,3 +27,5 @@ config.js
 keys.js
 nodemon.json
 access.log
+server.cert
+server.key
