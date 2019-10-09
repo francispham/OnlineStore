@@ -37,8 +37,8 @@ const store = new MongoDBStore({
 
 const csrfProtection = csrf();
 
-const privateKey = fs.readFileSync('server.key');
-const certificate = fs.readFileSync('server.cert');
+// const privateKey = fs.readFileSync('server.key');
+// const certificate = fs.readFileSync('server.cert');
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -175,6 +175,8 @@ mongoose.connect(
   .then(result => {
     // Before Implementing HTTPS:
     // app.listen(process.env.PORT || 3000);
+    
+    /* Before Using a Hosting Provider:
     https.createServer(
       {
         key: privateKey,
@@ -182,7 +184,9 @@ mongoose.connect(
       },
       app
     ).listen(process.env.PORT || 3000);
-    
+    */
+
+    app.listen(process.env.PORT || 3000);
     console.log("Listening Localhost: 3000 or NOT");
   })
   .catch(err => {
