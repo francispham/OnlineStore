@@ -20,12 +20,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-config.js
 .vscode/
 
-/images
 keys.js
 nodemon.json
-access.log
 server.cert
 server.key
