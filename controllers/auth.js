@@ -4,13 +4,13 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
 const { validationResult } = require('express-validator/check');
-const keys = require('../config/keys');
+// const keys = require('../config/keys');
 
 const User = require('../models/user');
 
 const transporter = nodemailer.createTransport(sendgridTransport({
     auth: {
-        api_key: keys.api_key
+        api_key: process.env.SEND_GID_KEY
     }
 }));
 
