@@ -1,7 +1,7 @@
 // ExpressJS Core Modules:
 const path = require('path');
 const fs = require('fs');
-const https = require('https');
+// const https = require('https');
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -79,7 +79,7 @@ app.use(compression());
 app.use(morgan('combined', { stream: accessLogStream }));
 
 // For Serving Files & Images Statically (eg public folder): 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // For Parsing Incoming Request Bodies (under the req.body property):
